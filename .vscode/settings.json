@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/toshiya/Work/Practice/C/sl",
+            "binaryPath": "/home/toshiya/Work/Practice/C/sl/sl",
+            "binaryArgs": []
+        }
+    ]
+}

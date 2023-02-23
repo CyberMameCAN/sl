@@ -61,7 +61,7 @@ int my_mvaddstr(int y, int x, char *str)
     for ( ; x < 0; ++x, ++str)
         if (*str == '\0')  return ERR;
     for ( ; *str != '\0'; ++str, ++x)
-        if (mvaddch(y, x, *str) == ERR)  return ERR;
+        if (mvaddch(y, x, *str) == ERR)  return ERR;  // move( ) + addch( )
     return OK;
 }
 
@@ -89,14 +89,29 @@ int main(int argc, char *argv[])
             option(argv[i] + 1);
         }
     }
+    // 最初にやる。端末の初期化。必須
     initscr();
+    // signalは、1つ目の引数にシグナルの番号、2つめの引数にその番号へのアクションを渡します。
+    // SIGINTはキーボードからの割り込みを管理する番号を指しています。
+    // よく、コマンドをCtrl+Cで中断するかと思いますが、あのときに発せられているシグナルがSIGINTです。
+    // (SIGnal INTerrupt の略)
+    // SIG_IGNは、その番号へのシグナルを無視する、というアクションです。(SIGnal IGNore)
+    // つまり、slコマンドの入力中にキーボードからの入力を無視してね、という命令を与えているのです。
     signal(SIGINT, SIG_IGN);
+    // 入力文字を端末に表示するかしないか。
     noecho();
+    // ターミナル中のカーソルの非表示
     curs_set(0);
+    // ターミナルへの入力されるバッファが空の場合にエラーが返るように設定
     nodelay(stdscr, TRUE);
+    // ターミナル中のカーソルの非表示(なんで2回目?)
     leaveok(stdscr, TRUE);
+    // ターミナルのスクロールを無効化
     scrollok(stdscr, FALSE);
 
+    // COLSという定数はncureseが提供する定数で、
+    // initscr()とすることで、起動しているターミナルのウィンドウサイズ(横幅)を保持している。
+    // LINESが縦幅を持っている
     for (x = COLS - 1; ; --x) {
         if (LOGO == 1) {
             if (add_sl(x) == ERR) break;
@@ -109,10 +124,10 @@ int main(int argc, char *argv[])
         }
         getch();
         refresh();
-        usleep(40000);
+        usleep(40000);  // マイクロ秒単位でスリープ
     }
     mvcur(0, COLS - 1, LINES - 1, 0);
-    endwin();
+    endwin();   // 最後にやる。端末の終了。必須
 
     return 0;
 }

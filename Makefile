@@ -6,15 +6,29 @@
 #	Last Modified: 2014/03/31
 #==========================================
 
-CC=gcc
-CFLAGS=-O -Wall
+TARGET = sl
 
-all: sl
+# Optimaze Option
+CFLAGOPT  = 
+CFLAGOPT += -O0
 
-sl: sl.c sl.h
-	$(CC) $(CFLAGS) -o sl sl.c -lncurses
+CC = gcc
+
+# cc options:
+CFLAGS =
+CFLAGS += -g 
+CFLAGS += $(CFLAGOPT)
+CFLAGS += -Wall
+
+$(TARGET): sl.c sl.h
+	$(CC) $(CFLAGS) -o $(TARGET) sl.c -lncurses
+
+all: clean $(TARGET)
 
 clean:
-	rm -f sl
+	rm -f $(TARGET)
 
 distclean: clean
+
+exec:
+	./$(TARGET)
